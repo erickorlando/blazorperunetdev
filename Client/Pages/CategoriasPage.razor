@@ -1,0 +1,62 @@
+﻿@page "/categorias"
+@inject HttpClient HttpClient
+
+
+<PageTitle>Categorias</PageTitle>
+
+<h3>Categorias</h3>
+
+<button type="button" class="btn btn-primary" @onclick="Cargar">Cargar datos</button>
+
+@if (Mostrar)
+{
+
+    @if (Categorias is null)
+    {
+        <p class="alert alert-warning">Cargando....</p>
+    }
+    else if (Categorias.Count == 0)
+    {
+        <p class="alert alert-info">No se encontró datos</p>
+    }
+    else
+    {
+        <table class="table table-bordered table-hover mt-4">
+            <thead>
+                <tr class="table-primary">
+                    <th>Id</th>
+                    <th>Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Categorias)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Nombre</td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    }
+
+}
+
+@code {
+
+    public ICollection<CategoriaDto>? Categorias { get; set; }
+
+    public bool Mostrar { get; set; }
+
+    private async Task Cargar()
+    {
+        Mostrar = true;
+        var response = await HttpClient.GetFromJsonAsync<ICollection<CategoriaDto>>("api/Categorias");
+        if (response != null)
+        {
+            Categorias = response;
+        }
+    }
+
+}
