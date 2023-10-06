@@ -1,4 +1,6 @@
-using Microsoft.AspNetCore.ResponseCompression;
+using ECommerceWeb.Server.Data;
+using ECommerceWeb.Server.Repository;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 //builder.Services.AddControllersWithViews(); // ASP.NET MVC
 //builder.Services.AddRazorPages(); // ASP.NET RAZOR PAGES
+builder.Services.AddDbContext<ECommerceDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ECommerceDb"));
+});
+
+builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+//builder.Services.AddSingleton<ICategoriaRepository, CategoriaMemoryRepository>();
 
 builder.Services.AddControllers();
 var app = builder.Build();

@@ -1,0 +1,20 @@
+﻿@page "/categorias/crear"
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject IToastService ToastService
+
+<CategoriaEditPage Categoria="Registro" OnGrabar="Grabar" />
+
+@code {
+
+    public CategoriaDto Registro { get; set; } = new CategoriaDto();
+
+    private async Task Grabar()
+    {
+        await HttpClient.PostAsJsonAsync("api/Categorias", Registro);
+        NavigationManager.NavigateTo("/categorias");
+
+        ToastService.ShowSuccess("Se guardó correctamente la categoria");
+    }
+
+}

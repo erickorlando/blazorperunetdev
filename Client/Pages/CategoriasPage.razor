@@ -1,12 +1,15 @@
 ﻿@page "/categorias"
 @inject HttpClient HttpClient
-
+@inject NavigationManager NavigationManager
+@inject IToastService ToastService
+@inject SweetAlertService Swal
 
 <PageTitle>Categorias</PageTitle>
 
 <h3>Categorias</h3>
 
-<button type="button" class="btn btn-primary" @onclick="Cargar">Cargar datos</button>
+<button type="button" class="btn btn-primary" @onclick="Cargar"><i class="bi bi-arrow-clockwise me-1"></i>Cargar datos</button>
+<NavLink class="btn btn-success" href="categorias/crear"><i class="bi bi-patch-plus me-1"></i>Agregar</NavLink>
 
 @if (Mostrar)
 {
@@ -26,6 +29,8 @@
                 <tr class="table-primary">
                     <th>Id</th>
                     <th>Nombre</th>
+                    <th>Comentarios</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,8 +39,12 @@
                     <tr>
                         <td>@item.Id</td>
                         <td>@item.Nombre</td>
+                        <td>@item.Comentarios</td>
+                        <td>
+                            <button class="btn btn-secondary" @onclick="() => Editar(item.Id)"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-danger" @onclick="() => Eliminar(item.Id)"><i class="bi bi-trash3-fill"></i></button>
+                        </td>
                     </tr>
-
                 }
             </tbody>
         </table>
@@ -49,14 +58,47 @@
 
     public bool Mostrar { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await Cargar();
+    }
+
     private async Task Cargar()
     {
-        Mostrar = true;
-        var response = await HttpClient.GetFromJsonAsync<ICollection<CategoriaDto>>("api/Categorias");
-        if (response != null)
+        try
         {
-            Categorias = response;
+            Mostrar = true;
+
+            var response = await HttpClient.GetFromJsonAsync<ICollection<CategoriaDto>>("api/Categorias");
+            if (response != null)
+            {
+                Categorias = response;
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
         }
     }
 
+    private void Editar(int id)
+    {
+        NavigationManager.NavigateTo($"/categorias/editar/{id}");
+    }
+
+    private async Task Eliminar(int id)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions("Desea eliminar el registro?")
+        {
+            Title = "Eliminar",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true
+        });
+
+        if (result.IsConfirmed)
+        {
+            await HttpClient.DeleteAsync($"api/Categorias/{id}");
+            await Cargar();
+        }
+    }
 }
