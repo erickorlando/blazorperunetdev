@@ -1,5 +1,6 @@
-using ECommerceWeb.Server.Data;
-using ECommerceWeb.Server.Repository;
+using ECommerceWeb.DataAccess.Data;
+using ECommerceWeb.Repositories.Implementaciones;
+using ECommerceWeb.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

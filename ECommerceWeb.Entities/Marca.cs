@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ECommerceWeb.Server.Entities;
+namespace ECommerceWeb.Entities;
 
 public class Marca : EntityBase
 {

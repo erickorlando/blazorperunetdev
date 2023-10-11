@@ -1,4 +1,4 @@
-﻿namespace ECommerceWeb.Server.Entities;
+﻿namespace ECommerceWeb.Entities;
 
 public class EntityBase
 {

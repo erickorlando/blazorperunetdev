@@ -1,4 +1,4 @@
-﻿namespace ECommerceWeb.Server.Entities;
+﻿namespace ECommerceWeb.Entities;
 
 // POCO: PLAIN OLD CLR (COMMON LANGUAGE RUNTIME) OBJECT
 public class Categoria : EntityBase

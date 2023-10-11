@@ -1,8 +1,8 @@
-﻿using ECommerceWeb.Server.Entities;
+﻿using ECommerceWeb.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ECommerceWeb.Server.Configurations;
+namespace ECommerceWeb.DataAccess.Configurations;
 
 public class ClienteConfiguration : IEntityTypeConfiguration<Cliente>
 {
@@ -10,10 +10,10 @@ public class ClienteConfiguration : IEntityTypeConfiguration<Cliente>
     {
         builder.Property(p => p.Nombres)
             .HasMaxLength(200);
-        
+
         builder.Property(p => p.Apellidos)
             .HasMaxLength(200);
-        
+
         builder.Property(p => p.Email)
             .IsUnicode(false)
             .HasMaxLength(500);

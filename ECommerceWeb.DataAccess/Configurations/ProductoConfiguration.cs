@@ -1,8 +1,8 @@
-﻿using ECommerceWeb.Server.Entities;
+﻿using ECommerceWeb.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ECommerceWeb.Server.Configurations;
+namespace ECommerceWeb.DataAccess.Configurations;
 
 public class ProductoConfiguration : IEntityTypeConfiguration<Producto>
 {

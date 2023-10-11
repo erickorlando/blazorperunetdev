@@ -2,20 +2,20 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
-namespace ECommerceWeb.Server.Data;
+namespace ECommerceWeb.DataAccess.Data;
 
 public class ECommerceDbContext : DbContext
 {
     public ECommerceDbContext(DbContextOptions<ECommerceDbContext> options)
-        :base(options)
+        : base(options)
     {
-        
+
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
         // Fluent API
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
