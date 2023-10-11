@@ -1,5 +1,6 @@
-﻿using ECommerceWeb.Server.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace ECommerceWeb.Server.Data;
 
@@ -14,26 +15,16 @@ public class ECommerceDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
+        // Fluent API
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
 
-        modelBuilder.Entity<Categoria>()
-            .HasKey(p => p.Id); // Esta es la llave primaria
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        base.ConfigureConventions(configurationBuilder);
 
-        modelBuilder.Entity<Categoria>()
-            .Property(p => p.Nombre)
-            .HasMaxLength(200);
-
-        modelBuilder.Entity<Categoria>()
-            .Property(p => p.Comentarios)
-            .HasMaxLength(500);
-
-        var lista  = new List<Categoria>()
-        {
-            new() { Id = 1, Nombre = "Celulares"},
-            new() { Id = 2, Nombre = "Televisores"},
-            new() { Id = 3, Nombre = "Electrodomésticos"},
-        };
-
-        modelBuilder.Entity<Categoria>()
-            .HasData(lista);
+        //configurationBuilder.Properties<string>().HaveMaxLength(100); // ESTO ES UN EJEMPLO
+        configurationBuilder.Conventions.Remove(typeof(CascadeDeleteConvention));
     }
 }
