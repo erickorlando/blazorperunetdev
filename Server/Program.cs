@@ -15,7 +15,8 @@ builder.Services.AddDbContext<ECommerceDbContext>(options =>
 });
 
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
-//builder.Services.AddSingleton<ICategoriaRepository, CategoriaMemoryRepository>();
+builder.Services.AddTransient<IMarcaRepository, MarcaRepository>();
+builder.Services.AddTransient<IProductoRepository, ProductoRepository>();
 
 builder.Services.AddControllers();
 var app = builder.Build();

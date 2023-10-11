@@ -1,0 +1,65 @@
+﻿@page "/productos"
+@inject HttpClient HttpClient
+
+<PageTitle>Productos</PageTitle>
+
+<h3>Productos</h3>
+
+@if (Lista is null)
+{
+    <p class="alert alert-info">No hay datos para mostrar</p>
+}
+else if (!Lista.Any())
+{
+    <p class="alert alert-danger">La tabla esta vacía</p>
+}
+else
+{
+    <table class="table table-bordered table-hover mt-4">
+        <thead>
+        <tr class="table-primary">
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Precio Unitario</th>
+            <th>Marca</th>
+            <th>Categoria</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Lista)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Nombre</td>
+                <td>@item.PrecioUnitario</td>
+                <td>@item.Marca</td>
+                <td>@item.Categoria</td>
+                <td>
+                    @* <button class="btn btn-secondary" @onclick="() => Editar(item.Id)"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-danger" @onclick="() => Eliminar(item.Id)"><i class="bi bi-trash3-fill"></i></button> *@
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    public ICollection<ProductoDto>? Lista { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Cargar();
+    }
+
+    private async Task Cargar()
+    {
+        var response = await HttpClient.GetFromJsonAsync<ICollection<ProductoDto>>("api/Productos");
+        if (response != null)
+        {
+            Lista = response;
+        }
+    }
+}

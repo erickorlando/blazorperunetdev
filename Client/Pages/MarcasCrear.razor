@@ -1,0 +1,20 @@
+﻿@page "/marcas/crear"
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject IToastService ToastService
+
+<MarcaEditPage Marca="Registro" OnGrabar="Grabar" />
+
+@code {
+
+    public MarcaDto Registro { get; set; } = new MarcaDto();
+
+    private async Task Grabar()
+    {
+        await HttpClient.PostAsJsonAsync("api/marcas", Registro);
+        NavigationManager.NavigateTo("/marcas");
+
+        ToastService.ShowSuccess("Se guardó correctamente la Marca");
+    }
+
+}
