@@ -16,7 +16,8 @@ builder.Services.AddDbContext<ECommerceDbContext>(options =>
 
 // Patron Builder
 builder.Services.AddRepositories()
-    .AddAutoMappers();
+    .AddAutoMappers()
+    .AddServices();
 
 builder.Services.AddControllers();
 var app = builder.Build();

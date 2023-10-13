@@ -2,6 +2,7 @@
 @inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
 @inject SweetAlertService Swal
+@inject IToastService ToastService
 
 <PageTitle>Productos</PageTitle>
 
@@ -62,6 +63,8 @@ else
         }
         </tbody>
     </table>
+
+    <LoadingComponent IsLoading="Cargando" />
 }
 
 @code {
@@ -70,6 +73,8 @@ else
 
     public string? Filtro { get; set; }
 
+    public bool Cargando { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await Cargar();
@@ -77,10 +82,22 @@ else
 
     private async Task Cargar()
     {
-        var response = await HttpClient.GetFromJsonAsync<ICollection<ProductoDto>>($"api/Productos?filtro={Filtro}");
-        if (response != null)
+        Cargando = true;
+        try
         {
-            Lista = response;
+            var response = await HttpClient.GetFromJsonAsync<ICollection<ProductoDto>>($"api/Productos?filtro={Filtro}");
+            if (response != null)
+            {
+                Lista = response;
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+        finally
+        {
+            Cargando = false;
         }
     }
 

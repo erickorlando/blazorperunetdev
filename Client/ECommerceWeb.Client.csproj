@@ -26,6 +26,7 @@
     <_ContentIncludedByDefault Remove="Pages\MarcasPage.razor" />
     <_ContentIncludedByDefault Remove="Pages\ProductosPage.razor" />
     <_ContentIncludedByDefault Remove="Shared\CategoriaEditPage.razor" />
+    <_ContentIncludedByDefault Remove="Shared\LoadingComponent.razor" />
     <_ContentIncludedByDefault Remove="Shared\ProductoEditPage.razor" />
   </ItemGroup>
 
@@ -43,6 +44,10 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Shared\ProductoEditPage.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Shared\LoadingComponent.razor" />
   </ItemGroup>
 
 </Project>

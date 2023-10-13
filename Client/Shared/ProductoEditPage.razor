@@ -1,4 +1,7 @@
-﻿<h3>Producto</h3>
+﻿@using ECommerceWeb.Shared.Request
+@inject SweetAlertService Swal
+
+<h3>Producto</h3>
 
 <EditForm Model="Producto" OnValidSubmit="Grabar">
     <DataAnnotationsValidator />
@@ -58,6 +61,24 @@
             </div>
         </div>
     </div>
+    <div class="card">
+        <div class="card-body">
+            @if (Producto.Base64Imagen is not null)
+            {
+                <div style="margin: 10px">
+                    <img src="data:image/jpeg;base64,@Producto.Base64Imagen" alt="@Producto.Nombre" style="width: 400px"/>
+                </div>
+            }
+            else
+            {
+                <img src="@Producto.UrlImagen" alt="@Producto.Nombre" style="width: 400px" />
+            }
+        </div>
+        <div class="card-footer">
+            <InputFile accept="image/png, image/jpeg, image/webp" style="display: none" OnChange="OnFileUploaded" id="file" />
+            <label for="file" class="btn btn-secondary"><i class="bi bi-camera me-1"></i>IMAGEN</label>
+        </div>
+    </div>
     
     <ValidationSummary />
     
@@ -76,7 +97,7 @@
     public ICollection<MarcaDto> Marcas { get; set; } = new List<MarcaDto>();
 
     [Parameter]
-    public ProductoDto Producto { get; set; } = new ProductoDto();
+    public ProductoDtoRequest Producto { get; set; } = new ProductoDtoRequest();
 
     [Parameter]
     public EventCallback OnGrabar { get; set; }
@@ -84,5 +105,23 @@
     private async Task Grabar()
     {
         await OnGrabar.InvokeAsync();
+    }
+
+    private async Task OnFileUploaded(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var imagen = e.File;
+            var buffer = new byte[imagen.Size];
+            var _ = await imagen.OpenReadStream().ReadAsync(buffer);
+
+            Producto.Base64Imagen = Convert.ToBase64String(buffer);
+            Producto.NombreArchivo = imagen.Name;
+            Producto.UrlImagen = null;
+        }
+        catch (Exception ex)
+        {
+            await Swal.FireAsync("Error de Archivo", ex.Message);
+        }
     }
 }

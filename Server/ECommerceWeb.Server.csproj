@@ -31,5 +31,9 @@
     <ProjectReference Include="..\Shared\ECommerceWeb.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 
 </Project>

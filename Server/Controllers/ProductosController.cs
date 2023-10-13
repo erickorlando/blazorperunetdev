@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ECommerceWeb.Entities;
 using ECommerceWeb.Repositories.Interfaces;
+using ECommerceWeb.Server.Services;
 using ECommerceWeb.Shared;
 using ECommerceWeb.Shared.Request;
 using Microsoft.AspNetCore.Mvc;
@@ -13,26 +14,28 @@ public class ProductosController : ControllerBase
 {
     private readonly IProductoRepository _repository;
     private readonly IMapper _mapper;
+    private readonly IFileUploader _fileUploader;
 
-    public ProductosController(IProductoRepository repository, IMapper mapper)
+    public ProductosController(IProductoRepository repository, IMapper mapper, IFileUploader fileUploader)
     {
         _repository = repository;
         _mapper = mapper;
+        _fileUploader = fileUploader;
     }
 
     [HttpGet]
     public async Task<IActionResult> Get(string? filtro)
     {
         var lista = await _repository.ListAsync(
-            predicado: p => p.Estado && p.Nombre.Contains(filtro ?? string.Empty), 
+            predicado: p => p.Estado && p.Nombre.Contains(filtro ?? string.Empty),
            selector: x => new ProductoDto
-        {
-            Id = x.Id,
-            Nombre = x.Nombre,
-            PrecioUnitario = x.PrecioUnitario,
-            Marca = x.Marca.Nombre,
-            Categoria = x.Categoria.Nombre
-        }, relaciones: "Marca,Categoria");
+           {
+               Id = x.Id,
+               Nombre = x.Nombre,
+               PrecioUnitario = x.PrecioUnitario,
+               Marca = x.Marca.Nombre,
+               Categoria = x.Categoria.Nombre
+           }, relaciones: "Marca,Categoria");
 
         return Ok(lista);
     }
@@ -50,6 +53,8 @@ public class ProductosController : ControllerBase
     {
         var producto = _mapper.Map<Producto>(request);
 
+        producto.UrlImagen = await _fileUploader.UploadFileAsync(request.Base64Imagen, request.NombreArchivo);
+
         await _repository.AddAsync(producto);
 
         return Ok();
@@ -64,8 +69,18 @@ public class ProductosController : ControllerBase
             return NotFound();
         }
 
+        if (!string.IsNullOrWhiteSpace(request.Base64Imagen))
+        {
+            if (string.IsNullOrWhiteSpace(registro.UrlImagen))
+            {
+                registro.UrlImagen = await _fileUploader.UploadFileAsync(request.Base64Imagen, request.NombreArchivo);
+            }
+            else
+                registro.UrlImagen = await _fileUploader.UploadFileAsync(request.Base64Imagen, request.NombreArchivo);
+        }
+
         _mapper.Map(request, registro);
-        
+
         await _repository.UpdateAsync();
 
         return Ok();
