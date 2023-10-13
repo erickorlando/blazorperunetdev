@@ -71,12 +71,7 @@ public class ProductosController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(request.Base64Imagen))
         {
-            if (string.IsNullOrWhiteSpace(registro.UrlImagen))
-            {
-                registro.UrlImagen = await _fileUploader.UploadFileAsync(request.Base64Imagen, request.NombreArchivo);
-            }
-            else
-                registro.UrlImagen = await _fileUploader.UploadFileAsync(request.Base64Imagen, request.NombreArchivo);
+            request.UrlImagen = await _fileUploader.UploadFileAsync(request.Base64Imagen, request.NombreArchivo);
         }
 
         _mapper.Map(request, registro);
