@@ -1,0 +1,56 @@
+﻿@page "/productos/editar/{Id:int}"
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject IToastService ToastService
+
+<h3>Editar Producto</h3>
+<ProductoEditPage Categorias="Categorias" Marcas="Marcas" Producto="Producto" OnGrabar="Actualizar" />
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    public ProductoDto Producto { get; set; } = new ProductoDto();
+
+    public ICollection<CategoriaDto> Categorias { get; set; } = new List<CategoriaDto>();
+
+    public ICollection<MarcaDto> Marcas { get; set; } = new List<MarcaDto>();
+
+    private async Task Actualizar()
+    {
+        try
+        {
+            await HttpClient.PutAsJsonAsync($"api/Productos/{Id}", Producto);
+            ToastService.ShowInfo("Actualización de Producto registrado correctamente");
+            NavigationManager.NavigateTo("/productos");
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await HttpClient.GetAsync($"api/Productos/{Id}");
+            response.EnsureSuccessStatusCode();
+
+            Producto = (await response.Content.ReadFromJsonAsync<ProductoDto>())!;
+
+            var responseCategorias = await HttpClient.GetFromJsonAsync<ICollection<CategoriaDto>>("api/Categorias");
+            if (responseCategorias is not null)
+                Categorias = responseCategorias;
+
+            var responseMarcas = await HttpClient.GetFromJsonAsync<ICollection<MarcaDto>>("api/Marcas");
+            if (responseMarcas is not null)
+                Marcas = responseMarcas;
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+    }
+}

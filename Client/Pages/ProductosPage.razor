@@ -1,9 +1,28 @@
 ﻿@page "/productos"
 @inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject SweetAlertService Swal
 
 <PageTitle>Productos</PageTitle>
 
 <h3>Productos</h3>
+
+<NavLink class="btn btn-success" href="productos/crear"><i class="bi bi-patch-plus me-1"></i>Agregar</NavLink>
+
+<div class="row mb-5 mt-4 justify-content-start w-50 align-items-baseline">
+    <div class="col-1">
+        <label class="form-label" for="filtro">Nombre:</label>
+    </div>
+    <div class="col-8">
+        <div class="input-group">
+            <input type="text" class="form-control" @bind-value="Filtro" id="filtro"/>
+            <span class="input-group-text" style="cursor: pointer" @onclick="() => Filtro = string.Empty" ><i class="bi bi-x"></i></span>
+        </div>
+    </div>
+    <div class="col-sm">
+        <button type="button" class="btn btn-outline-primary" @onclick="Cargar"><i class="bi bi-search"></i></button>
+    </div>
+</div>
 
 @if (Lista is null)
 {
@@ -36,8 +55,8 @@ else
                 <td>@item.Marca</td>
                 <td>@item.Categoria</td>
                 <td>
-                    @* <button class="btn btn-secondary" @onclick="() => Editar(item.Id)"><i class="bi bi-pencil"></i></button>
-                    <button class="btn btn-danger" @onclick="() => Eliminar(item.Id)"><i class="bi bi-trash3-fill"></i></button> *@
+                    <button class="btn btn-secondary" @onclick="() => Editar(item.Id)"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-danger" @onclick="() => Eliminar(item.Id)"><i class="bi bi-trash3-fill"></i></button>
                 </td>
             </tr>
         }
@@ -49,6 +68,8 @@ else
 
     public ICollection<ProductoDto>? Lista { get; set; }
 
+    public string? Filtro { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await Cargar();
@@ -56,10 +77,31 @@ else
 
     private async Task Cargar()
     {
-        var response = await HttpClient.GetFromJsonAsync<ICollection<ProductoDto>>("api/Productos");
+        var response = await HttpClient.GetFromJsonAsync<ICollection<ProductoDto>>($"api/Productos?filtro={Filtro}");
         if (response != null)
         {
             Lista = response;
+        }
+    }
+
+    private void Editar(int id)
+    {
+        NavigationManager.NavigateTo($"/productos/editar/{id}");
+    }
+
+    private async Task Eliminar(int id)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions("Desea eliminar el registro?")
+            {
+                Title = "Eliminar",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+        if (result.IsConfirmed)
+        {
+            await HttpClient.DeleteAsync($"api/productos/{id}");
+            await Cargar();
         }
     }
 }

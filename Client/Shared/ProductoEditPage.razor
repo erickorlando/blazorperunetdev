@@ -1,0 +1,88 @@
+﻿<h3>Producto</h3>
+
+<EditForm Model="Producto" OnValidSubmit="Grabar">
+    <DataAnnotationsValidator />
+    
+    <div class="row mb-3">
+        <div class="col">
+            <label class="col-sm-2 form-label" for="nombre">Nombre:</label>
+            <div class="col-sm-4">
+                <InputText @bind-Value="Producto.Nombre" id="nombre" class="form-control" />
+                <ValidationMessage For="() => Producto.Nombre" />
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <label class="col-sm-2 form-label" for="nombre">Descripcion:</label>
+            <div class="col-sm-4">
+                <InputText @bind-Value="Producto.Descripcion" id="descrpcion" class="form-control" />
+                <ValidationMessage For="() => Producto.Descripcion" />
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <label class="col-sm-2 form-label" for="precioUnitario">Precio Unitario:</label>
+            <div class="col-sm-2">
+                <InputNumber @bind-Value="Producto.PrecioUnitario" id="precioUnitario" class="form-control" />
+                <ValidationMessage For="() => Producto.PrecioUnitario" />
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <label class="col-sm-2 form-label" for="categoria">Categoria:</label>
+            <div class="col-sm-4">
+                <InputSelect @bind-Value="Producto.CategoriaId" id="categoria" class="form-select">
+                    <option>-Seleccione Categoria</option>
+                    @foreach (var item in Categorias)
+                    {
+                        <option value="@item.Id">@item.Nombre</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <label class="col-sm-2 form-label" for="categoria">Marca:</label>
+            <div class="col-sm-4">
+                <InputSelect @bind-Value="Producto.MarcaId" id="marca" class="form-select">
+                    <option>-Seleccione Marca</option>
+                    @foreach (var item in Marcas)
+                    {
+                        <option value="@item.Id">@item.Nombre</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+    </div>
+    
+    <ValidationSummary />
+    
+    <button type="submit" class="btn btn-primary"><i class="bi bi-floppy me-1"></i>Grabar</button>
+    <button type="reset" class="btn btn-danger"><i class="bi bi-eraser me-1"></i>Limpiar</button>
+
+</EditForm>
+
+
+@code {
+
+    [Parameter]
+    public ICollection<CategoriaDto> Categorias { get; set; } = new List<CategoriaDto>();
+
+    [Parameter]
+    public ICollection<MarcaDto> Marcas { get; set; } = new List<MarcaDto>();
+
+    [Parameter]
+    public ProductoDto Producto { get; set; } = new ProductoDto();
+
+    [Parameter]
+    public EventCallback OnGrabar { get; set; }
+
+    private async Task Grabar()
+    {
+        await OnGrabar.InvokeAsync();
+    }
+}

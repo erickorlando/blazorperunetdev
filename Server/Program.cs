@@ -1,6 +1,5 @@
 using ECommerceWeb.DataAccess.Data;
-using ECommerceWeb.Repositories.Implementaciones;
-using ECommerceWeb.Repositories.Interfaces;
+using ECommerceWeb.Server.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,11 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ECommerceDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("ECommerceDb"));
+    options.EnableSensitiveDataLogging();
 });
 
-builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
-builder.Services.AddTransient<IMarcaRepository, MarcaRepository>();
-builder.Services.AddTransient<IProductoRepository, ProductoRepository>();
+// Patron Builder
+builder.Services.AddRepositories()
+    .AddAutoMappers();
 
 builder.Services.AddControllers();
 var app = builder.Build();

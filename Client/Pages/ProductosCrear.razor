@@ -1,0 +1,43 @@
+﻿@page "/productos/crear"
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject IToastService ToastService
+
+<ProductoEditPage Producto="Producto" Categorias="Categorias" Marcas="Marcas" OnGrabar="Grabar" />
+
+@code {
+
+    public ProductoDto Producto { get; set; } = new ProductoDto();
+
+    public ICollection<CategoriaDto> Categorias { get; set; } = new List<CategoriaDto>();
+
+    public ICollection<MarcaDto> Marcas { get; set; } = new List<MarcaDto>();
+
+    private async Task Grabar()
+    {
+        try
+        {
+            await HttpClient.PostAsJsonAsync("api/Productos", Producto);
+            ToastService.ShowInfo("Registro de Producto registrado correctamente");
+            NavigationManager.NavigateTo("/productos");
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseCategorias = await HttpClient.GetFromJsonAsync<ICollection<CategoriaDto>>("api/Categorias");
+        if (responseCategorias is not null)
+            Categorias = responseCategorias;
+
+        var responseMarcas = await HttpClient.GetFromJsonAsync<ICollection<MarcaDto>>("api/Marcas");
+        if (responseMarcas is not null)
+            Marcas = responseMarcas;
+
+
+    }
+
+}
