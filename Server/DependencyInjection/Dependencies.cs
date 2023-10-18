@@ -18,7 +18,8 @@ public static class Dependencies
 
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        return services.AddTransient<IFileUploader, FileUploader>();
+        return services.AddTransient<IFileUploader, FileUploader>()
+            .AddTransient<IUserService, UserService>();
     }
 
     public static IServiceCollection AddAutoMappers(this IServiceCollection services)
