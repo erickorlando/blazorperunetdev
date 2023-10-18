@@ -11,7 +11,8 @@ public static class Dependencies
     {
         services.AddTransient<ICategoriaRepository, CategoriaRepository>()
                 .AddTransient<IMarcaRepository, MarcaRepository>()
-                .AddTransient<IProductoRepository, ProductoRepository>();
+                .AddTransient<IProductoRepository, ProductoRepository>()
+                .AddTransient<IClienteRepository, ClienteRepository>();
 
         return services;
     }

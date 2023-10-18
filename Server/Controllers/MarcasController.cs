@@ -1,5 +1,6 @@
 ﻿using ECommerceWeb.Entities;
 using ECommerceWeb.Repositories.Interfaces;
+using ECommerceWeb.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +30,7 @@ public class MarcasController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = Constantes.RolAdministrador)]
     public async Task<IActionResult> Post(Marca request)
     {
         await _repository.AddAsync(request);
