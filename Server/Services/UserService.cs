@@ -82,12 +82,13 @@ public class UserService : IUserService
             response.NombreCompleto = identity.NombreCompleto;
             response.Exito = true;
 
+            
             _logger.LogInformation("Se creó el JWT de forma satisfactoria");
         }
         catch (SecurityException ex)
         {
             response.MensajeError = ex.Message;
-            _logger.LogWarning(ex, "Error de seguridad {Message}", ex.Message);
+            _logger.LogError(ex, "Error de seguridad {Message}", ex.Message);
         }
         catch (Exception ex)
         {
@@ -146,7 +147,7 @@ public class UserService : IUserService
         catch (Exception ex)
         {
             response.MensajeError = "Error al registrar";
-            _logger.LogCritical(ex, "{MensajeError} {Message}", response.MensajeError, ex.Message);
+            _logger.LogWarning(ex, "{MensajeError} {Message}", response.MensajeError, ex.Message);
         }
         return response;
     }

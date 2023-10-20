@@ -1,4 +1,3 @@
-using System.Text;
 using ECommerceWeb.DataAccess;
 using ECommerceWeb.DataAccess.Data;
 using ECommerceWeb.Server.DependencyInjection;
@@ -8,9 +7,30 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Events;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Text;
+using Serilog.Sinks.MSSqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var logger = new LoggerConfiguration()
+    .WriteTo.Console(LogEventLevel.Information)
+    .WriteTo.File("..\\registro-.log",
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
+        restrictedToMinimumLevel: LogEventLevel.Error,
+        rollingInterval: RollingInterval.Day)
+    .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("ECommerceDb"),
+        new MSSqlServerSinkOptions
+        {
+            AutoCreateSqlTable = true,
+            TableName = "BlazorLogs"
+        }, restrictedToMinimumLevel: LogEventLevel.Error)
+    .CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 // Leer el archivo de configuracion y lo traslada a un objeto fuertemente tipado
 builder.Services.Configure<AppSettings>(builder.Configuration);

@@ -1,44 +1,71 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Tienda Online</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿@using ECommerceWeb.Client.Auth
+@inject SweetAlertService Swal
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Inicio
+<header>
+    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+        <div class="container-fluid">
+            <NavLink class="navbar-brand" href="/">
+                <img src="assets/images/galaxy-training-logo.png" alt="Galaxy Store" />
             </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="categorias">
-                <span class="oi oi-plus" aria-hidden="true"></span> Categorias
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="marcas">
-                <span class="oi oi-pencil" aria-hidden="true"></span> Marcas
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="productos">
-                <span class="oi oi-pencil" aria-hidden="true"></span> Productos
-            </NavLink>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarColor01" aria-controls="navbarColor01"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav me-auto mb-2">
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="/">Inicio</NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="categorias">Categorias</NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="marcas">Marcas</NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="productos">Productos</NavLink>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <AuthorizeView>
+                    <Authorized>
+                        <NavLink class="navbar-text text-white">
+                            <i class="bi bi-person-circle me-1"></i> @context.User.Identity!.Name
+                        </NavLink>
+                        <button class="btn btn-outline-info" @onclick="CerrarSesion"><i class="bi bi-door-open me-1"></i>Salir</button>
+                    </Authorized>
+                    <NotAuthorized>
+                        <NavLink class="btn btn-outline-info" href="login"><i class="bi bi-box-arrow-in-right me-1"></i>Ingresar</NavLink>
+                        <NavLink class="btn btn-outline-info" href="register"><i class="bi bi-person-add me-1"></i>Registrarse</NavLink>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
         </div>
     </nav>
-</div>
+</header>
 
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
+@code
+{
+    private async Task CerrarSesion()
     {
-        collapseNavMenu = !collapseNavMenu;
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Desea salir?",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true,
+            ConfirmButtonText = "Sí",
+            CancelButtonText = "No"
+        });
+
+        if (result.IsConfirmed)
+        {
+            var auth = (AuthenticationService)AuthenticationStateProvider;
+            await auth.Authenticate(null);
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
     }
 }

@@ -9,10 +9,12 @@ namespace ECommerceWeb.Server.Controllers;
 public class UsuariosController : ControllerBase
 {
     private readonly IUserService _service;
+    private readonly ILogger<UsuariosController> _logger;
 
-    public UsuariosController(IUserService service)
+    public UsuariosController(IUserService service, ILogger<UsuariosController> logger)
     {
         _service = service;
+        _logger = logger;
     }
 
     // POST: api/Usuarios/Login
@@ -20,6 +22,8 @@ public class UsuariosController : ControllerBase
     public async Task<IActionResult> Login(LoginDtoRequest request)
     {
         var response = await _service.LoginAsync(request);
+
+        _logger.LogInformation("Se inicio sesion desde {RequestID}", HttpContext.Connection.Id);
 
         return response.Exito ? Ok(response) : Unauthorized(response);
     }
@@ -30,6 +34,6 @@ public class UsuariosController : ControllerBase
     {
         var response = await _service.RegisterAsync(request);
 
-        return response.Exito ? Ok(response) : BadRequest(response);
+        return Ok(response);
     }
 }
