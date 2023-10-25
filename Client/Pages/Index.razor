@@ -2,6 +2,7 @@
 @inject IProductoProxy ProductoProxy
 @inject IToastService ToastService
 @inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
 
 <PageTitle>Inicio</PageTitle>
 
@@ -44,7 +45,7 @@
 
             @foreach (var producto in filter)
             {
-                <ProductCard Producto="producto" />
+                <ProductCard Producto="producto" OnClick="VerDetalle" />
             }
         </div>
     </div>
@@ -107,5 +108,10 @@
         {
             await ObtenerCatalogo();
         }
+    }
+
+    private void VerDetalle(int id)
+    {
+        NavigationManager.NavigateTo($"/detalle/{id}");
     }
 }

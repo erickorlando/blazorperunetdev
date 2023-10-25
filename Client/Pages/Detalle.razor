@@ -1,0 +1,57 @@
+﻿@page "/detalle/{Id:int}"
+@inject IProductoProxy ProductoProxy
+@inject IToastService ToastService
+
+<div class="container px-4 px-lg-5">
+    @if (Producto is not null)
+    {
+        <div class="row gx-4 align-items-center">
+            <div class="col">
+                @if (string.IsNullOrWhiteSpace(Producto.UrlImagen))
+                {
+                    <img src="assets/images/sinimagen.jpeg" class="card-img-top border-dark border-1 producto-card-wide" alt="@Producto.Nombre"/>
+                }
+                else
+                {
+                    <img src="@Producto.UrlImagen" class="card-img-top border-dark border-1 producto-card-wide" alt="@Producto.Nombre" />
+                }
+            </div>
+            <div class="col">
+                <h1 class="display-5 fw-bolder">@Producto.Nombre</h1>
+                <div class="fs-5 mb-5">
+                    <span>$ @Producto.PrecioUnitario.ToString("N2")</span>
+                </div>
+                <p class="lead">@Producto.Descripcion</p>
+                <div class="d-flex">
+                    <NavLink class="btn btn-secondary" href=""><i class="bi bi-skip-backward-fill me-1"></i>Volver</NavLink>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    public ProductoDto? Producto { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            var response = await ProductoProxy.FindByIdAsync(Id);
+            if (response != null)
+            {
+                Producto = response;
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+    }
+
+}

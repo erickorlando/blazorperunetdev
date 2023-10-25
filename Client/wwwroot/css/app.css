@@ -86,3 +86,8 @@ html, body {
 .titulo {
     font-family: 'Merriweather', sans-serif;
 }
+
+.producto-card-wide {
+    width: 100%;
+    height: 100%;
+}
