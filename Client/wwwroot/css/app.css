@@ -82,3 +82,7 @@ html, body {
     .loading-progress-text:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
+
+.titulo {
+    font-family: 'Merriweather', sans-serif;
+}

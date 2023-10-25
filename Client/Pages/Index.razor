@@ -1,4 +1,111 @@
 ﻿@page "/"
-@attribute [Authorize]
+@inject IProductoProxy ProductoProxy
+@inject IToastService ToastService
+@inject HttpClient HttpClient
 
 <PageTitle>Inicio</PageTitle>
+
+<h1 class="titulo">Escoge tu mejor opcion</h1>
+<div>
+    <div class="row justify-content-center mt-3 mb-4">
+        <div class="col-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Buscar producto"
+                @onkeypress="OnTeclaPresionada" @bind-value="Buscar" />
+                <button class="btn btn-secondary" @onclick="ObtenerCatalogo">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-3">
+            @if (Categorias is not null)
+            {
+                <select class="form-select" @onchange="OnSelectionChange">
+                    <option>-Categoria-</option>
+                    @foreach (var categoria in Categorias)
+                    {
+                        <option value="@categoria.Id">@categoria.Nombre</option>
+                    }
+                </select>
+            }
+        </div>
+    </div>
+</div>
+
+@if (Productos is not null)
+{
+    var filter = Productos;
+    if (CategoriaSeleccionada is { } catSeleccionado) // pattern matching
+    {
+        filter = Productos.Where(p => p.CategoriaId == catSeleccionado).ToList();
+    }
+    <div class="container mb-5 gap-5">
+        <div class="row gx-4 row-cols-1 row-cols-md-3 row-cols-xl-5 justify-content-center">
+
+            @foreach (var producto in filter)
+            {
+                <ProductCard Producto="producto" />
+            }
+        </div>
+    </div>
+}
+
+<LoadingComponent IsLoading="IsLoading" />
+
+@code
+{
+    private ICollection<ProductoDto>? Productos { get; set; }
+    private ICollection<CategoriaDto>? Categorias { get; set; }
+    private int? CategoriaSeleccionada { get; set; }
+
+    private string Buscar { get; set; } = default!;
+    public bool IsLoading { get; set; }
+
+    private async Task ObtenerCatalogo()
+    {
+        try
+        {
+            IsLoading = true;
+
+            Productos = await ProductoProxy.ListAsync(Buscar);
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerCatalogo();
+        var response = await HttpClient.GetFromJsonAsync<ICollection<CategoriaDto>>("api/Categorias");
+        if (response != null)
+        {
+            Categorias = response;
+        }
+    }
+
+    private void OnSelectionChange(ChangeEventArgs args)
+    {
+        if (args.Value!.ToString()!.Contains("-"))
+        {
+            CategoriaSeleccionada = null;
+        }
+        else
+        {
+            CategoriaSeleccionada = int.Parse(args.Value.ToString()!);
+        }
+    }
+
+    private async Task OnTeclaPresionada(KeyboardEventArgs args)
+    {
+        if (args.Key.Equals("Enter", StringComparison.InvariantCultureIgnoreCase))
+        {
+            await ObtenerCatalogo();
+        }
+    }
+}

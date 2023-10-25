@@ -22,6 +22,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredSessionStorage();
 
 builder.Services.AddScoped<IUserProxy, UserProxy>();
+builder.Services.AddScoped<IProductoProxy, ProductoProxy>();
 
 // Habilitamos el contexto de seguridad en Blazor
 builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationService>();

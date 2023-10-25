@@ -1,0 +1,35 @@
+﻿<div class="col mb-5">
+    <div class="card h-100 shadow-lg">
+        <div class="text-center">
+            @if (string.IsNullOrWhiteSpace(Producto.UrlImagen))
+            {
+                <img class="card-img-top border-dark border-1 producto-card" src="assets/images/sinimagen.jpeg"
+                     alt="@Producto.Nombre"/>
+            }
+            else
+            {
+                <img class="card-img-top border-dark border-1 producto-card"
+                     src="@Producto.UrlImagen" alt="@Producto.Nombre"/>
+            }
+        </div>
+        <div class="card-body p-4 text-center">
+            <h5 class="fw-bolder">@Producto.Nombre</h5>
+            <span>$ @Producto.PrecioUnitario.ToString("N2")</span>
+        </div>
+        <div class="card-footer">
+            <div class="text-center">
+                <a class="btn btn-outline-primary mt-auto">Ver Producto</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [EditorRequired]
+    [Parameter]
+    public ProductoDto Producto { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<int> OnClick { get; set; }
+}

@@ -34,7 +34,9 @@ public class ProductosController : ControllerBase
                Nombre = x.Nombre,
                PrecioUnitario = x.PrecioUnitario,
                Marca = x.Marca.Nombre,
-               Categoria = x.Categoria.Nombre
+               Categoria = x.Categoria.Nombre, 
+               CategoriaId = x.CategoriaId,
+               UrlImagen = x.UrlImagen
            }, relaciones: "Marca,Categoria");
 
         return Ok(lista);
