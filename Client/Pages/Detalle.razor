@@ -1,6 +1,7 @@
 ﻿@page "/detalle/{Id:int}"
 @inject IProductoProxy ProductoProxy
 @inject IToastService ToastService
+@inject ICarritoProxy CarritoProxy
 
 <div class="container px-4 px-lg-5">
     @if (Producto is not null)
@@ -23,6 +24,11 @@
                 </div>
                 <p class="lead">@Producto.Descripcion</p>
                 <div class="d-flex">
+                    <input type="number" class="form-control text-center me-3" min="1" style="width: 60px" @bind-value="Cantidad"/>
+                    <button class="btn btn-outline-dark flex-shrink-0 me-3" @onclick="() => AgregarCarrito(Producto)">
+                        <i class="bi bi-cart-plus-fill me-1"></i>
+                        Agregar al carrito
+                    </button>
                     <NavLink class="btn btn-secondary" href=""><i class="bi bi-skip-backward-fill me-1"></i>Volver</NavLink>
                 </div>
             </div>
@@ -38,6 +44,8 @@
 
     public ProductoDto? Producto { get; set; }
 
+    public int Cantidad { get; set; } = 1;
+
     protected override async Task OnParametersSetAsync()
     {
         try
@@ -52,6 +60,19 @@
         {
             ToastService.ShowError(ex.Message);
         }
+    }
+
+    private async Task AgregarCarrito(ProductoDto producto)
+    {
+        var carrito = new CarritoDto
+        {
+            ProductoDto = producto,
+            Cantidad = Cantidad,
+            Precio = producto.PrecioUnitario,
+            Total = Cantidad * producto.PrecioUnitario
+        };
+
+        await CarritoProxy.AgregarCarrito(carrito);
     }
 
 }

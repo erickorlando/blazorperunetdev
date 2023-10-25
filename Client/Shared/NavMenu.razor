@@ -2,6 +2,8 @@
 @inject SweetAlertService Swal
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject ICarritoProxy CarritoProxy
+@implements IDisposable
 
 <header>
     <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
@@ -30,6 +32,11 @@
                     </li>
                 </ul>
             </div>
+            <a class="btn btn-outline-info ms-auto me-3">
+                <i class="bi bi-cart me-1"></i>
+                Carrito
+                <span class="badge bg-info text-white rounded-pill">@MostrarCantidadCarrito()</span>
+            </a>
             <div>
                 <AuthorizeView>
                     <Authorized>
@@ -67,5 +74,20 @@
             await auth.Authenticate(null);
             NavigationManager.NavigateTo("/", forceLoad: true);
         }
+    }
+
+    private int MostrarCantidadCarrito()
+    {
+        return CarritoProxy.CantidadProductos();
+    }
+
+    protected override void OnInitialized()
+    {
+        CarritoProxy.ActualizarVista += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CarritoProxy.ActualizarVista += StateHasChanged;
     }
 }
