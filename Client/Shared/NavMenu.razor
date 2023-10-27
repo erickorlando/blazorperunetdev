@@ -30,6 +30,13 @@
                     <li class="nav-item">
                         <NavLink class="nav-link" href="productos">Productos</NavLink>
                     </li>
+                    <AuthorizeView Roles="@Constantes.RolAdministrador">
+                        <Authorized>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="dashboard">Dashboard</NavLink>
+                            </li>
+                        </Authorized>
+                    </AuthorizeView>
                 </ul>
             </div>
             <a class="btn btn-outline-info ms-auto me-3" href="carrito">

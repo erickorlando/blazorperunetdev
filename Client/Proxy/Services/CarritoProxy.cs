@@ -42,7 +42,7 @@ public class CarritoProxy : ICarritoProxy
 
             ActualizarVista?.Invoke();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             _toastService.ShowError("No se puede agregar al carrito");
         }

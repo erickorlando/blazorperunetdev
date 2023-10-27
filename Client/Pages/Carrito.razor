@@ -1,5 +1,8 @@
 ﻿@page "/carrito"
 @inject ICarritoProxy CarritoProxy
+@inject IVentaProxy VentaProxy
+@inject NavigationManager NavigationManager
+@inject IToastService ToastService
 
 <div class="row mt-4">
     <div class="col-sm-8">
@@ -71,7 +74,7 @@
     <div class="col-sm-4">
         <div class="card mb-3">
             <div class="card-body">
-                <EditForm Model="TarjetaDto">
+                <EditForm Model="TarjetaDto" OnValidSubmit="ProcesarPago">
                     <DataAnnotationsValidator />
 
                     <div class="mb-2">
@@ -102,7 +105,8 @@
                     <hr />
                     <div class="d-flex justify-content-between">
                         <div>Total a pagar:</div>
-                        <div>$ 
+                        <div>
+                            $
                             @if (Lista is { Count: > 0 })
                             {
                                 @Lista.Sum(i => i.Total)
@@ -163,6 +167,44 @@
         {
             Lista.Remove(item);
             await CarritoProxy.EliminarCarrito(idProducto);
+        }
+    }
+
+    private async Task ProcesarPago()
+    {
+        if (!Lista.Any())
+        {
+            ToastService.ShowWarning("No se encontraron productos");
+            return;
+        }
+
+        var listItems = Lista.Select(item => new VentaDetalleDto
+            {
+                ProductoId = item.ProductoDto.Id,
+                Cantidad = item.Cantidad,
+                Precio = item.Precio,
+                Total = item.Total
+            }).ToList();
+
+        var request = new VentaDto
+            {
+                Total = Lista.Sum(i => i.Total),
+                VentaDetalles = listItems
+            };
+
+        try
+        {
+            var response = await VentaProxy.CrearVenta(request);
+            if (response.Exito)
+            {
+                await CarritoProxy.LimpiarCarrito();
+                ToastService.ShowSuccess("Venta registrada con exito");
+                NavigationManager.NavigateTo("/");
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
         }
     }
 }

@@ -29,6 +29,7 @@
     <_ContentIncludedByDefault Remove="Pages\Auth\Login.razor" />
     <_ContentIncludedByDefault Remove="Pages\Auth\Register.razor" />
     <_ContentIncludedByDefault Remove="Pages\CategoriasCrear.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Dashboard.razor" />
     <_ContentIncludedByDefault Remove="Pages\MarcasPage.razor" />
     <_ContentIncludedByDefault Remove="Pages\ProductosPage.razor" />
     <_ContentIncludedByDefault Remove="Shared\CategoriaEditPage.razor" />
@@ -62,6 +63,10 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Pages\Auth\Register.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Dashboard.razor" />
   </ItemGroup>
 
 </Project>

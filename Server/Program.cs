@@ -11,6 +11,7 @@ using Serilog;
 using Serilog.Events;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Text;
+using ECommerceWeb.Server;
 using Serilog.Sinks.MSSqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +44,7 @@ builder.Services.AddDbContext<ECommerceDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("ECommerceDb"));
     options.EnableSensitiveDataLogging();
+    options.LogTo(LoggerPersonalizado.Log, LogLevel.Information);
 });
 
 // Configuramos ASP.NET Identity

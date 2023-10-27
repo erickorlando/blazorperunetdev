@@ -12,7 +12,8 @@ public static class Dependencies
         services.AddTransient<ICategoriaRepository, CategoriaRepository>()
                 .AddTransient<IMarcaRepository, MarcaRepository>()
                 .AddTransient<IProductoRepository, ProductoRepository>()
-                .AddTransient<IClienteRepository, ClienteRepository>();
+                .AddTransient<IClienteRepository, ClienteRepository>()
+                .AddTransient<IVentaRepository, VentaRepository>();
 
         return services;
     }
@@ -28,6 +29,7 @@ public static class Dependencies
         services.AddAutoMapper(config =>
         {
             config.AddProfile<ProductoProfile>();
+            config.AddProfile<VentaProfile>();
         });
         return services;
     }
