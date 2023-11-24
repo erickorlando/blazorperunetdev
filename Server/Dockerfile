@@ -5,12 +5,12 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Server/ECommerceWeb.Server.csproj", "Server/"]
-COPY ["Client/ECommerceWeb.Client.csproj", "Client/"]
-COPY ["Shared/ECommerceWeb.Shared.csproj", "Shared/"]
 COPY ["ECommerceWeb.DataAccess/ECommerceWeb.DataAccess.csproj", "ECommerceWeb.DataAccess/"]
 COPY ["ECommerceWeb.Entities/ECommerceWeb.Entities.csproj", "ECommerceWeb.Entities/"]
 COPY ["ECommerceWeb.Repositories/ECommerceWeb.Repositories.csproj", "ECommerceWeb.Repositories/"]
+COPY ["Server/ECommerceWeb.Server.csproj", "Server/"]
+COPY ["Client/ECommerceWeb.Client.csproj", "Client/"]
+COPY ["Shared/ECommerceWeb.Shared.csproj", "Shared/"]
 RUN dotnet restore "Server/ECommerceWeb.Server.csproj"
 COPY . .
 WORKDIR "/src/Server"
