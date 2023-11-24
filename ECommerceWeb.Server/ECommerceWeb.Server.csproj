@@ -38,11 +38,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\ECommerceWeb.Client.csproj" />
+    <ProjectReference Include="..\ECommerceWeb.Client\ECommerceWeb.Client.csproj" />
     <ProjectReference Include="..\ECommerceWeb.DataAccess\ECommerceWeb.DataAccess.csproj" />
     <ProjectReference Include="..\ECommerceWeb.Entities\ECommerceWeb.Entities.csproj" />
     <ProjectReference Include="..\ECommerceWeb.Repositories\ECommerceWeb.Repositories.csproj" />
-    <ProjectReference Include="..\Shared\ECommerceWeb.Shared.csproj" />
+    <ProjectReference Include="..\ECommerceWeb.Shared\ECommerceWeb.Shared.csproj" />
   </ItemGroup>
 
 

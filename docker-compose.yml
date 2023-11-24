@@ -14,7 +14,7 @@ services:
     volumes:
       - sqldata:/var/opt/mssql
   ecommerceweb.server:
-    image: ${DOCKER_REGISTRY-}ecommercewebserver
+    image: perunetdev.azurecr.io/ecommercewebserver:latest
     build:
       context: .
       dockerfile: Server/Dockerfile

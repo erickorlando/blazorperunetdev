@@ -18,10 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\ECommerceWeb.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <UpToDateCheckInput Remove="Shared\CategoriaEditPage.razor" />
   </ItemGroup>
 
@@ -67,6 +63,10 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Pages\Dashboard.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ECommerceWeb.Shared\ECommerceWeb.Shared.csproj" />
   </ItemGroup>
 
 </Project>
