@@ -4,11 +4,11 @@ WORKDIR /app
 
 # Copia el archivo de proyecto y restaura las dependencias
 COPY *.csproj .
-RUN dotnet build ./Server
+RUN dotnet build ./Server/ECommerceWeb.Server.csproj
 
 # Copia el código fuente y compila la aplicación
 COPY . .
-RUN dotnet publish ./Server -c Release -o out
+RUN dotnet publish ./Server/ECommerceWeb.Server.csproj -c Release -o out
 
 # Utiliza una imagen base más ligera para ejecutar la aplicación
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
