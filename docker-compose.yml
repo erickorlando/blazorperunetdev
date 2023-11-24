@@ -17,7 +17,7 @@ services:
     image: perunetdev.azurecr.io/ecommercewebserver:latest
     build:
       context: .
-      dockerfile: ECommerceWeb.Server/Dockerfile
+      dockerfile: Dockerfile
     depends_on:
       - db
 
