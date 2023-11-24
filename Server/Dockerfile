@@ -1,27 +1,22 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+# Utiliza la imagen base de .NET 7 SDK para compilar la aplicación
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
+
+# Copia el archivo de proyecto y restaura las dependencias
+COPY *.csproj .
+RUN dotnet restore
+
+# Copia el código fuente y compila la aplicación
+COPY . .
+RUN dotnet publish -c Release -o out
+
+# Utiliza una imagen base más ligera para ejecutar la aplicación
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/out .
+
+# Exponer los puertos 80 y 443
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-WORKDIR /src
-COPY ["Server/ECommerceWeb.Server.csproj", "Server/"]
-COPY ["Client/ECommerceWeb.Client.csproj", "Client/"]
-COPY ["Shared/ECommerceWeb.Shared.csproj", "Shared/"]
-COPY ["ECommerceWeb.DataAccess/ECommerceWeb.DataAccess.csproj", "ECommerceWeb.DataAccess/"]
-COPY ["ECommerceWeb.Entities/ECommerceWeb.Entities.csproj", "ECommerceWeb.Entities/"]
-COPY ["ECommerceWeb.Repositories/ECommerceWeb.Repositories.csproj", "ECommerceWeb.Repositories/"]
-RUN dotnet restore "Server/ECommerceWeb.Server.csproj"
-COPY . .
-WORKDIR "/src/Server"
-RUN dotnet build "ECommerceWeb.Server.csproj" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "ECommerceWeb.Server.csproj" -c Release -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ECommerceWeb.Server.dll"]
