@@ -13,7 +13,7 @@ variables:
   dockerRegistryServiceConnection: '0101071f-cc9d-47da-ba6c-3e2f96939bcd'
   imageRepository: 'ecommerceweb'
   containerRegistry: 'perunetdev.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Server/Dockerfile'
+  dockerfilePath: '$(Build.SourcesDirectory)/ECommerceWeb.Server/Dockerfile'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
