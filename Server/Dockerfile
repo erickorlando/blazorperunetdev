@@ -1,16 +1,16 @@
-# Utiliza la imagen base de .NET 7 SDK para compilar la aplicaci髇
+# Utiliza la imagen base de .NET 7 SDK para compilar la aplicaci贸n
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
 
 # Copia el archivo de proyecto y restaura las dependencias
 COPY *.csproj .
-RUN dotnet build ./Server/
+RUN dotnet build ./Server
 
-# Copia el c骴igo fuente y compila la aplicaci髇
+# Copia el c贸digo fuente y compila la aplicaci贸n
 COPY . .
-RUN dotnet publish ./Server/ -c Release -o out
+RUN dotnet publish ./Server -c Release -o out
 
-# Utiliza una imagen base m醩 ligera para ejecutar la aplicaci髇
+# Utiliza una imagen base m谩s ligera para ejecutar la aplicaci贸n
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/out .
