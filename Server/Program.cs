@@ -139,6 +139,9 @@ app.MapFallbackToFile("index.html");
 
 using (var scope = app.Services.CreateScope())
 {
+    var context = scope.ServiceProvider.GetRequiredService<ECommerceDbContext>();
+    System.Diagnostics.Debug.WriteLine(context.Database.GetConnectionString());
+    context.Database.Migrate();
     await UserDataSeeder.Seed(scope.ServiceProvider);
 }
 

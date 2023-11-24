@@ -7,7 +7,7 @@ public class TarjetaDto
     [Required(ErrorMessage = "Ingrese Titular")]
     public string? Titular { get; set; }
 
-    [RegularExpression(@"^\d{4}-\d{4}-\d{4}-\d{4}$", ErrorMessage = "Ingrese una tarjeta valida")]
+    [Required(ErrorMessage = "Ingrese una tarjeta valida")]
     public string? Numero { get; set; }
 
     [Required(ErrorMessage = "Ingrese Vigencia")]

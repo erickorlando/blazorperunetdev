@@ -84,7 +84,7 @@
                     </div>
                     <div class="mb-2">
                         <label class="form-label">Numero Tarjeta</label>
-                        <input type="text" class="form-control form-control-sm" placeholder="################" autocomplete="off"
+                        <input type="text" id="number" class="form-control form-control-sm" placeholder="################" autocomplete="off"
                         @bind-value="TarjetaDto.Numero" />
                         <ValidationMessage For="() => TarjetaDto.Numero" />
                     </div>
