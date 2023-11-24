@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copia el archivo de proyecto y restaura las dependencias
 COPY *.csproj .
-RUN dotnet restore
+RUN dotnet build
 
 # Copia el código fuente y compila la aplicación
 COPY . .
