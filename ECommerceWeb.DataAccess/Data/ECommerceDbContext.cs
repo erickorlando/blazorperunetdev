@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using ECommerceWeb.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
@@ -38,6 +39,13 @@ public class ECommerceDbContext : IdentityDbContext<IdentityUserECommerce>
         {
             e.ToTable("UsuarioRol");
         });
+
+        modelBuilder.Entity<Marca>()
+            .HasData(new List<Marca>()
+            {
+                new() { Id = 1, Nombre = "Samsung" },
+                new() { Id = 2, Nombre = "Apple" },
+            });
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
