@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mydb
+    user: '0:0'
+    ports:
+       - 1433:1433
+    environment:
+       - SA_PASSWORD=PeruN3TDevelopment$@123
+       - ACCEPT_EULA=Y
+       - MSSQL_PID=Developer
+    volumes:
+       - sqldata:/var/opt/mssql
+  ecommerceweb.server:
+    image: ecommercewebserver:latest
+    build:
+      context: .
+      dockerfile: ECommerceWeb.Server/Dockerfile
+    depends_on:
+       - db
+
+volumes:
+   sqldata:
+    driver: local
